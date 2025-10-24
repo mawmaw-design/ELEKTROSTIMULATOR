@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Presentasi Mudah: Alat Terapi Listrik (Elektrostimulator)</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Share+Tech+Mono&display=swap");
+
+      :root {
+        /* Tema Elektrik */
+        --pulse-primary: #00bfff;
+        --pulse-secondary: #00ff7f;
+        --bg-dark: #0a0a10;
+        --text-light: #e0e0e0;
+        --text-secondary: #b0b0b0;
+        --accent-tech: var(--pulse-primary);
+        --border-tech: rgba(0, 191, 255, 0.3);
+        /* Warna baru */
+        --electric-glow: #ffff00; /* Kuning menyala untuk kelistrikan */
+      }
+
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        font-family: "Roboto", sans-serif;
+        background-color: var(--bg-dark);
+        color: var(--text-light);
+        overflow: hidden;
+        height: 100%;
+        width: 100%;
+      }
+
+      #presentation-container {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .slide {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 30px 40px;
+        box-sizing: border-box;
+        text-align: center;
+        opacity: 0;
+        transform: scale(0.95);
+        transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+        background: linear-gradient(
+          135deg,
+          rgba(10, 10, 16, 0.98),
+          rgba(0, 20, 30, 0.95)
+        );
+      }
+
+      .slide.active {
+        opacity: 1;
+        transform: scale(1);
+      }
+      .slide.exit {
+        opacity: 0;
+        transform: scale(1.05);
+      }
+
+      .slide-title {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--accent-tech);
+        margin-bottom: 5px;
+        text-shadow: 0 0 10px var(--accent-tech);
+      }
+
+      .slide-subtitle {
+        font-size: 1.2rem;
+        font-weight: 300;
+        color: var(--text-secondary);
+        max-width: 900px;
+        margin-bottom: 20px;
+      }
+
+      .slide-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+        max-width: 1200px;
+        flex-grow: 1;
+      }
+
+      .content-section-title {
+        width: 100%;
+        text-align: center;
+        font-size: 1.5rem;
+        color: var(--accent-tech);
+        margin-bottom: 20px;
+        border-bottom: 1px solid var(--border-tech);
+        padding-bottom: 10px;
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        width: 100%;
+      }
+
+      .info-card {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid var(--border-tech);
+        padding: 20px;
+        border-radius: 8px;
+        text-align: left;
+      }
+
+      .info-card h4 {
+        font-family: "Share Tech Mono", monospace;
+        color: var(--accent-tech);
+        font-size: 1.2rem;
+        margin-top: 0;
+        margin-bottom: 10px;
+      }
+
+      .info-card p,
+      .info-card li {
+        font-size: 1rem;
+        line-height: 1.7;
+        color: var(--text-secondary);
+      }
+      .info-card strong {
+        color: var(--text-light);
+      }
+      .info-card .analogy {
+        font-style: italic;
+        color: var(--pulse-secondary);
+        border-left: 3px solid var(--pulse-secondary);
+        padding-left: 10px;
+        margin-top: 10px;
+      }
+
+      ul {
+        list-style-type: none;
+        padding-left: 0;
+      }
+
+      /* Diagram Styles */
+      .diagram-container {
+        width: 100%;
+        height: 100%;
+        max-height: 60vh;
+        display: flex;
+        gap: 20px;
+      }
+      .diagram {
+        flex: 1;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--border-tech);
+        border-radius: 5px;
+        padding: 10px;
+      }
+      .diagram h4 {
+        text-align: center;
+        color: var(--accent-tech);
+        margin: 0 0 10px 0;
+      }
+      .diagram svg {
+        width: 100%;
+        height: 90%;
+      }
+
+      /* Fullscreen Button Style */
+      #fullscreen-btn {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 101;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid var(--border-tech);
+        color: var(--text-light);
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+      }
+      #fullscreen-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+      #fullscreen-btn svg {
+        display: block;
+      }
+
+      /* CSS untuk Animasi Nama */
+      #name-container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+        z-index: 10;
+        background: transparent;
+      }
+      .name-entry {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 2.8rem;
+        color: var(--text-light);
+        margin: 15px;
+        opacity: 0;
+        transition: opacity 0.5s;
+      }
+      .name-entry.visible {
+        opacity: 1;
+      }
+      .name-entry .cursor {
+        display: inline-block;
+        width: 10px;
+        height: 2.5rem;
+        background-color: var(--accent-tech);
+        animation: blink 0.7s infinite;
+      }
+      .name-entry.glitching {
+        animation: glitch-anim 0.4s ease-in-out;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+      @keyframes glitch-anim {
+        0% {
+          opacity: 1;
+          transform: skewX(0);
+        }
+        25% {
+          opacity: 0.7;
+          transform: skewX(-15deg);
+          text-shadow: 0 0 5px red;
+        }
+        50% {
+          opacity: 1;
+          transform: skewX(15deg);
+          text-shadow: 0 0 5px blue;
+        }
+        75% {
+          opacity: 0.7;
+          transform: skewX(-10deg);
+        }
+        100% {
+          opacity: 1;
+          transform: skewX(0);
+        }
+      }
+
+      /* --- BACKGROUND ANIMASI SLIDE 1 BARU (ELEKTROSTIMULATOR) --- */
+      .slide-intro-bg-stimulator {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 1; /* Di belakang nama */
+        background-color: #050a10; /* Latar belakang lebih gelap sedikit */
+
+        /* Lapisan Gradien: [Glow Saraf (biru)], [Outline Saraf (kuning)], [Pulsa Listrik (biru)], [Pulsa Listrik (biru lain)] */
+        background-image: radial-gradient(
+            ellipse at center,
+            rgba(0, 191, 255, 0.15) 0%,
+            transparent 60%
+          ),
+          /* Glow umum */ /* Outlines kuning menyala untuk saraf */
+            linear-gradient(
+              60deg,
+              transparent 49%,
+              var(--electric-glow) 49.5%,
+              var(--electric-glow) 50.5%,
+              transparent 51%
+            ),
+          linear-gradient(
+            120deg,
+            transparent 49%,
+            var(--electric-glow) 49.5%,
+            var(--electric-glow) 50.5%,
+            transparent 51%
+          ),
+          linear-gradient(
+            20deg,
+            transparent 49%,
+            var(--electric-glow) 49.5%,
+            var(--electric-glow) 50.5%,
+            transparent 51%
+          ),
+          /* Pulsa Biru */
+            linear-gradient(
+              -30deg,
+              transparent 48%,
+              var(--accent-tech) 50%,
+              transparent 52%
+            ),
+          linear-gradient(
+            90deg,
+            transparent 47%,
+            var(--border-tech) 50%,
+            transparent 53%
+          );
+
+        background-size: 100% 100%, /* Glow umum */ 300px 300px, 300px 300px,
+          300px 300px, /* Outlines kuning */ 250px 250px, 250px 250px; /* Pulsa Biru */
+
+        opacity: 0.7;
+        filter: blur(
+          2px
+        ); /* Blur sedikit agar terlihat seperti glow, bukan garis tajam */
+
+        /* Animasi untuk menggerakkan pulsa dan outline */
+        animation: move-pulses 8s linear infinite,
+          glow-flicker 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes move-pulses {
+        0% {
+          background-position: 0% 0%, 0% 0%, 100% 100%, 50% 100%,
+            /* Outlines kuning */ 20% 0%, 80% 100%; /* Pulsa Biru */
+        }
+        100% {
+          background-position: 0% 0%, 300px 300px, -300px -300px, -150% 50%,
+            /* Outlines kuning */ -20% 100%, 120% 0%; /* Pulsa Biru */
+        }
+      }
+
+      @keyframes glow-flicker {
+        0% {
+          text-shadow: 0 0 5px var(--electric-glow);
+        }
+        50% {
+          text-shadow: 0 0 10px var(--electric-glow),
+            0 0 20px rgba(255, 255, 0, 0.6);
+        }
+        100% {
+          text-shadow: 0 0 5px var(--electric-glow);
+        }
+      }
+      /* --- Akhir dari CSS Background Baru --- */
+    </style>
+  </head>
+  <body>
+    <button id="fullscreen-btn" title="Toggle Fullscreen">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"
+        ></path>
+      </svg>
+    </button>
+
+    <div id="presentation-container">
+      <!-- Slide 1: Judul (BARU) -->
+      <div class="slide active" id="slide1">
+        <div class="slide-intro-bg-stimulator"></div>
+        <div id="name-container">
+          <!-- Nama akan diisi oleh JavaScript -->
+        </div>
+      </div>
+
+      <!-- Slide 2: Fungsi Alat -->
+      <div class="slide" id="slide2">
+        <h1 class="slide-title">Alat Ini Buat Apa Sih? (Fungsi)</h1>
+        <p class="slide-subtitle">
+          Memahami Fungsi Elektrostimulator (Alat Terapi Listrik) dengan Bahasa
+          Santai
+        </p>
+        <div class="slide-content">
+          <div class="info-grid" style="grid-template-columns: 1fr 1fr">
+            <div class="info-card">
+              <h4>TENS (Transcutaneous Electrical Nerve Stimulation)</h4>
+              <p>
+                <strong>Tujuan:</strong> Mengurangi rasa sakit/nyeri.<br />
+                <strong>Cara:</strong> Alat ini "menipu" saraf dengan sinyal
+                listrik frekuensi tinggi. Saraf jadi sibuk mengurus sinyal
+                listrik ini sehingga "lupa" mengirim sinyal nyeri ke otak. Ini
+                seperti menutup gerbang sinyal nyeri.
+              </p>
+            </div>
+            <div class="info-card">
+              <h4>EMS (Electrical Muscle Stimulation)</h4>
+              <p>
+                <strong>Tujuan:</strong> Melatih/memulihkan otot.<br />
+                <strong>Cara:</strong> Alat ini mengirim sinyal listrik yang
+                lebih kuat untuk "memerintahkan" otot berkontraksi. Ini seperti
+                fitness pasif, dipakai untuk fisioterapi pasien stroke atau
+                pasca-cedera agar ototnya tidak mengecil (atrofi).
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3: Prinsip Kerja -->
+      <div class="slide" id="slide3">
+        <h2 class="slide-title">Prinsip Kerja: "Nyetrum" yang Terkontrol</h2>
+        <p class="slide-subtitle">
+          Bagaimana alat sekecil ini bisa menghasilkan sensasi "setrum" yang
+          aman?
+        </p>
+        <div class="slide-content">
+          <div class="info-card" style="width: 80%; text-align: left">
+            <h4>Dari Baterai Lemah ke Pulsa Kuat</h4>
+            <p>
+              Alat ini pada dasarnya adalah "Pembangkit Pulsa Mini". Prinsip
+              kerjanya ada 3 langkah:
+            </p>
+            <ul
+              style="
+                list-style-type: square;
+                padding-left: 20px;
+                margin-top: 10px;
+              "
+            >
+              <li>
+                <strong>Langkah 1 (Naikkan Tegangan):</strong> Baterai 9V tidak
+                akan terasa di kulit. Jadi, alat ini punya rangkaian "Turbo"
+                (Boost Converter) untuk menaikkan tegangan dari 9V menjadi 50V -
+                100V.
+              </li>
+              <li>
+                <strong>Langkah 2 (Cacah Sinyal):</strong> Tegangan tinggi tadi
+                "dicacah" atau "dipotong-potong" menjadi pulsa-pulsa pendek oleh
+                "Saklar" super cepat (H-Bridge).
+              </li>
+              <li>
+                <strong>Langkah 3 (Amankan):</strong> Pulsa ini dilewatkan ke
+                "Tembok Pengaman" (Trafo Isolasi) sebelum akhirnya disalurkan ke
+                elektroda di kulit pasien.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 4: Alur Kerja (Gambaran Besar) -->
+      <div class="slide" id="slide4">
+        <h2 class="slide-title">Alur Kerja Sistem (Gambaran Besar)</h2>
+        <p class="slide-subtitle">
+          Visualisasi sederhana perjalanan sinyal dari baterai ke pasien.
+        </p>
+        <div class="slide-content">
+          <div class="diagram-container">
+            <div class="diagram" style="flex: 2">
+              <h4>Diagram Konsep Alur Kerja Stimulator</h4>
+              <svg viewBox="0 0 600 400">
+                <style>
+                  .box {
+                    fill: #1a1a2a;
+                    stroke: var(--border-tech);
+                    stroke-width: 2;
+                  }
+                  .box-mcu {
+                    stroke: #00ff7f;
+                    stroke-width: 3;
+                  }
+                  .box-power {
+                    stroke: #cccc00;
+                  }
+                  .box-patient {
+                    stroke: #ff1e1e;
+                  }
+                  .txt {
+                    font-family: "Share Tech Mono", monospace;
+                    fill: var(--text-light);
+                    font-size: 16px;
+                    text-anchor: middle;
+                  }
+                  .arrow-power {
+                    fill: none;
+                    stroke: #cccc00;
+                    stroke-width: 2.5;
+                    marker-end: url(#arrowhead-power);
+                  }
+                  .arrow-pulse {
+                    fill: none;
+                    stroke: var(--accent-tech);
+                    stroke-width: 2.5;
+                    marker-end: url(#arrowhead-pulse);
+                  }
+                  .arrow-ctrl {
+                    fill: none;
+                    stroke: #00ff7f;
+                    stroke-width: 2;
+                    marker-end: url(#arrowhead-ctrl);
+                    stroke-dasharray: 5, 3;
+                  }
+                </style>
+                <defs>
+                  <marker
+                    id="arrowhead-power"
+                    viewBox="0 0 10 10"
+                    refX="8"
+                    refY="5"
+                    markerWidth="6"
+                    markerHeight="6"
+                    orient="auto-start-reverse"
+                  >
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#cccc00" />
+                  </marker>
+                  <marker
+                    id="arrowhead-pulse"
+                    viewBox="0 0 10 10"
+                    refX="8"
+                    refY="5"
+                    markerWidth="6"
+                    markerHeight="6"
+                    orient="auto-start-reverse"
+                  >
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#00BFFF" />
+                  </marker>
+                  <marker
+                    id="arrowhead-ctrl"
+                    viewBox="0 0 10 10"
+                    refX="8"
+                    refY="5"
+                    markerWidth="6"
+                    markerHeight="6"
+                    orient="auto-start-reverse"
+                  >
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#00FF7F" />
+                  </marker>
+                </defs>
+
+                <rect
+                  class="box box-power"
+                  x="50"
+                  y="100"
+                  width="100"
+                  height="50"
+                  rx="5"
+                />
+                <text class="txt" x="100" y="130">BATERAI</text>
+
+                <rect
+                  class="box box-mcu"
+                  x="250"
+                  y="250"
+                  width="100"
+                  height="50"
+                  rx="5"
+                />
+                <text class="txt" x="300" y="280">OTAK (MCU)</text>
+                <rect
+                  class="box"
+                  x="250"
+                  y="320"
+                  width="100"
+                  height="50"
+                  rx="5"
+                />
+                <text class="txt" x="300" y="350">Tombol</text>
+                <path class="arrow-ctrl" d="M 300 320 L 300 300" />
+
+                <rect
+                  class="box box-power"
+                  x="225"
+                  y="100"
+                  width="150"
+                  height="50"
+                  rx="5"
+                />
+                <text class="txt" x="300" y="122">Penaik Tegangan</text>
+                <text class="txt" x="300" y="140" style="font-size: 12px">
+                  (Atur Intensitas)
+                </text>
+                <path class="arrow-power" d="M 150 125 L 225 125" />
+                <path class="arrow-ctrl" d="M 300 250 L 300 150" />
+
+                <rect
+                  class="box"
+                  x="425"
+                  y="100"
+                  width="150"
+                  height="50"
+                  rx="5"
+                />
+                <text class="txt" x="500" y="122">Pembangkit Pulsa</text>
+                <text class="txt" x="500" y="140" style="font-size: 12px">
+                  (Atur Frekuensi)
+                </text>
+                <path class="arrow-power" d="M 375 125 L 425 125" />
+                <path class="arrow-ctrl" d="M 350 265 L 500 265 L 500 150" />
+
+                <rect
+                  class="box box-patient"
+                  x="450"
+                  y="250"
+                  width="100"
+                  height="50"
+                  rx="5"
+                />
+                <text class="txt" x="500" y="280">PASIEN</text>
+                <path class="arrow-pulse" d="M 500 150 L 500 250" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 5: Komponen (Kontrol & Baterai) -->
+      <div class="slide" id="slide5">
+        <h2 class="slide-title">Detail Komponen (1): Otak & Baterai</h2>
+        <p class="slide-subtitle">Bagian yang kita lihat dan kita sentuh.</p>
+        <div class="slide-content">
+          <div class="info-grid" style="grid-template-columns: 1fr 1fr">
+            <div class="info-card">
+              <h4>Otak (Mikrokontroler)</h4>
+              <p>
+                <strong>Fungsi:</strong> Komponen utama yang menjalankan
+                program. Otak ini membaca tombol mana yang kita tekan (misal:
+                "mode TENS", "frekuensi 50 Hz") dan membaca putaran
+                potensiometer (pengatur intensitas).
+              </p>
+            </div>
+            <div class="info-card">
+              <h4>Baterai & Power Supply</h4>
+              <p>
+                <strong>Fungsi:</strong> Sumber tenaga utama (biasanya baterai).
+                Di dalamnya ada rangkaian LDO (Low-Dropout) Regulator yang
+                mengubah tegangan baterai menjadi tegangan stabil (misal 3.3V)
+                untuk "makan" si Otak (MCU).
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 6: Komponen (Dapur Pacu) -->
+      <div class="slide" id="slide6">
+        <h2 class="slide-title">Detail Komponen (2): Dapur Pacu</h2>
+        <p class="slide-subtitle">
+          Bagian yang tidak terlihat, tapi paling penting: Pembangkit Pulsa
+          Tegangan Tinggi.
+        </p>
+        <div class="slide-content">
+          <div class="info-grid">
+            <div class="info-card">
+              <h4>Penaik Tegangan (DC-DC Boost Converter)</h4>
+              <p>
+                <strong>Fungsi:</strong> Mengubah 9V dari baterai menjadi 100V.
+                Semakin kuat kita putar tombol intensitas, Otak (MCU) akan
+                memerintahkan rangkaian ini untuk menaikkan tegangan lebih
+                tinggi lagi.
+              </p>
+              <p class="analogy">
+                <strong>Analogi: "Turbo" Baterai.</strong> Kita ngatur seberapa
+                kencang "turbo" ini bekerja lewat tombol intensitas.
+              </p>
+            </div>
+            <div class="info-card">
+              <h4>Pembalik Arus (H-Bridge)</h4>
+              <p>
+                <strong>Fungsi:</strong> Ini adalah 4 saklar (MOSFET) yang
+                diatur Otak (MCU) untuk "membolak-balik" arah arus tegangan
+                tinggi tadi. Jika kita setel 50 Hz, Otak akan membolak-balik
+                saklar ini 50 kali per detik.
+              </p>
+              <p class="analogy">
+                <strong>Analogi: Saklar Bolak-Balik.</strong> Seperti saklar
+                lampu hotel, tapi super cepat. Ini yang mengubah tegangan DC
+                (searah) 100V menjadi pulsa AC (bolak-balik/bifasik).
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 7: Komponen (Pengaman) -->
+      <div class="slide" id="slide7">
+        <h2 class="slide-title">Detail Komponen (3): Pengaman & Output</h2>
+        <p class="slide-subtitle">
+          Bagaimana memastikan "setrum" ini tidak berbahaya?
+        </p>
+        <div class="slide-content">
+          <div class="info-grid" style="grid-template-columns: 1fr 1fr">
+            <div class="info-card">
+              <h4>Trafo Isolasi (Pulse Transformer)</h4>
+              <p>
+                <strong>Fungsi:</strong> KEAMANAN VITAL. Ini adalah "tembok"
+                pemisah. Pulsa listrik dari H-Bridge *tidak menyentuh* pasien
+                secara langsung, tapi "diinduksikan" melalui trafo ini. Ini
+                memutus hubungan listrik (galvanic isolation) antara baterai dan
+                pasien. Jika baterai korslet, pasien tetap aman.
+              </p>
+            </div>
+            <div class="info-card">
+              <h4>Sensor Arus (Current Sense)</h4>
+              <p>
+                <strong>Fungsi:</strong> "Satpam" yang mengawasi arus. Sebuah
+                resistor kecil dipasang di jalur output. Otak (MCU) terus
+                memantau tegangan di resistor ini. Jika arusnya tiba-tiba
+                melonjak (misal elektroda korslet), Otak akan langsung "STOP!"
+                mematikan pulsa.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 8: Otak Alat (MCU) -->
+      <div class="slide" id="slide8">
+        <h2 class="slide-title">Otak Alat (Mikrokontroler)</h2>
+        <p class="slide-subtitle">
+          Ringkasan tugas si Otak (MCU) dalam mengatur irama.
+        </p>
+        <div class="slide-content">
+          <div class="info-grid" style="grid-template-columns: 1fr 1fr">
+            <div class="info-card">
+              <h4>Input (Perintah)</h4>
+              <ul
+                style="
+                  list-style-type: square;
+                  padding-left: 20px;
+                  margin-top: 10px;
+                "
+              >
+                <li>Tombol Mode: "Mau TENS atau EMS?"</li>
+                <li>Tombol Frekuensi: "Mau 50 Hz atau 100 Hz?"</li>
+                <li>Potensio Intensitas: "Seberapa kuat?"</li>
+                <li>Sensor Arus: "Lapor! Arus saat ini aman!"</li>
+              </ul>
+            </div>
+            <div class="info-card">
+              <h4>Output (Tindakan)</h4>
+              <ul
+                style="
+                  list-style-type: square;
+                  padding-left: 20px;
+                  margin-top: 10px;
+                "
+              >
+                <li>
+                  Ke "Turbo" (Boost): "Naikkan tegangan ke 70V!" (Mengatur
+                  Intensitas)
+                </li>
+                <li>
+                  Ke "Pembalik" (H-Bridge): "Mulai bolak-balik saklar 50 kali
+                  per detik!" (Mengatur Frekuensi)
+                </li>
+                <li>Ke Layar: "Tampilkan: 50 Hz, 20 menit."</li>
+                <li>
+                  <strong>Logika Darurat:</strong> Jika Sensor Arus lapor
+                  "BAHAYA! ARUS KEBABLASAN!", Otak langsung: "MATIKAN SEMUA
+                  PULSA! BUNYIKAN ALARM!"
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 9: Flowchart Sederhana -->
+      <div class="slide" id="slide9">
+        <h2 class="slide-title">Alur Kerja (Flowchart Sederhana)</h2>
+        <p class="slide-subtitle">Urutan kerja firmware di dalam Otak (MCU).</p>
+        <div class="slide-content">
+          <div class="diagram-container">
+            <div class="diagram" style="padding: 20px">
+              <svg viewBox="0 0 800 300">
+                <style>
+                  .start {
+                    fill: #003300;
+                    stroke: #00cc00;
+                  }
+                  .proc {
+                    fill: #1a1a2a;
+                    stroke: var(--accent-tech);
+                  }
+                  .cond {
+                    fill: #4d2600;
+                    stroke: #ff8000;
+                  }
+                  .alarm {
+                    fill: #8a0707;
+                    stroke: #ff1e1e;
+                  }
+                  .io {
+                    fill: #330033;
+                    stroke: #cc00cc;
+                  }
+                  .flow-txt {
+                    font-family: "Share Tech Mono", monospace;
+                    font-size: 11px;
+                    fill: white;
+                    text-anchor: middle;
+                  }
+                  .flow-arrow {
+                    fill: none;
+                    stroke: #ccc;
+                    stroke-width: 1.5;
+                    marker-end: url(#arrowhead);
+                  }
+                </style>
+                <defs>
+                  <marker
+                    id="arrowhead"
+                    viewBox="0 0 10 10"
+                    refX="8"
+                    refY="5"
+                    markerWidth="6"
+                    markerHeight="6"
+                    orient="auto-start-reverse"
+                  >
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#ccc" />
+                  </marker>
+                </defs>
+
+                <ellipse class="start" cx="70" cy="150" rx="60" ry="20" />
+                <text class="flow-txt" x="70" y="154">Mulai</text>
+                <path class="flow-arrow" d="M 130 150 L 160 150" />
+                <rect
+                  class="io"
+                  x="160"
+                  y="135"
+                  width="100"
+                  height="30"
+                  rx="5"
+                />
+                <text class="flow-txt" x="210" y="154">Pilih Mode & Waktu</text>
+                <path class="flow-arrow" d="M 260 150 L 290 150" />
+                <rect
+                  class="io"
+                  x="290"
+                  y="135"
+                  width="100"
+                  height="30"
+                  rx="5"
+                />
+                <text class="flow-txt" x="340" y="154">
+                  Atur Intensitas (0)
+                </text>
+                <path class="flow-arrow" d="M 390 150 L 420 150" />
+                <rect
+                  class="proc"
+                  x="420"
+                  y="135"
+                  width="100"
+                  height="30"
+                  rx="5"
+                />
+                <text class="flow-txt" x="470" y="154">Mulai Terapi</text>
+
+                <path class="flow-arrow" d="M 520 150 L 550 150" />
+                <rect
+                  class="proc"
+                  x="550"
+                  y="135"
+                  width="100"
+                  height="30"
+                  rx="5"
+                />
+                <text class="flow-txt" x="600" y="147">Kirim 1 Pulsa</text>
+                <text class="flow-txt" x="600" y="161">Cek Arus Aman?</text>
+                <path class="flow-arrow" d="M 650 150 L 680 150" />
+
+                <path
+                  d="M 745 125 L 710 150 L 745 175 L 780 150 Z"
+                  class="cond"
+                />
+                <text class="flow-txt" x="745" y="154">Waktu Selesai?</text>
+
+                <path
+                  class="flow-arrow"
+                  d="M 745 125 L 745 80 L 600 80 L 600 135"
+                />
+                <text class="flow-txt" x="670" y="95">Tidak</text>
+
+                <path
+                  class="flow-arrow"
+                  d="M 745 175 L 745 250 L 70 250 L 70 170"
+                />
+                <ellipse class="start" cx="70" cy="270" rx="60" ry="20" />
+                <text class="flow-txt" x="70" y="274">Selesai</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 10: Efek Samping & Risiko -->
+      <div class="slide" id="slide10">
+        <h2 class="slide-title">Sisi Lain: Efek Samping & Risiko</h2>
+        <p class="slide-subtitle">
+          Ini alat medis, bukan mainan. Ini yang bisa salah.
+        </p>
+        <div class="slide-content">
+          <div class="info-grid" style="grid-template-columns: 1fr 1fr">
+            <div class="info-card">
+              <h4>Luka Bakar Kulit (Burn)</h4>
+              <p>
+                <strong>Penyebab:</strong> Arus terlalu tinggi, atau elektroda
+                sudah kering/jelek. Arus jadi tidak merata dan "menusuk" di satu
+                titik. <br /><strong>Peran Teknisi:</strong> Pastikan Sensor
+                Arus berfungsi dan terkalibrasi. Jika sensor gagal, alarm tidak
+                bunyi, kulit pasien bisa gosong.
+              </p>
+            </div>
+            <div class="info-card">
+              <h4>Interferensi Alat Lain</h4>
+              <p>
+                <strong>Penyebab:</strong> Pulsa listriknya bisa mengganggu alat
+                elektromedis lain, terutama ALAT IMPLAN seperti Pacemaker (Pacu
+                Jantung). <br /><strong>Peringatan:</strong> Ini alasan utama
+                alat ini DILARANG KERAS dipakai di area dada dekat jantung,
+                terutama oleh pasien dengan pacemaker.
+              </p>
+            </div>
+            <div class="info-card">
+              <h4>Kegagalan Komponen (No Output)</h4>
+              <p>
+                <strong>Penyebab:</strong> Pasien komplain alatnya tidak terasa.
+                Kemungkinan besar Trafo Isolasi putus, atau salah satu MOSFET di
+                H-Bridge mati (open). <br /><strong>Peran Teknisi:</strong>
+                (Troubleshooting) Cek output H-Bridge dan output trafo pakai
+                osiloskop.
+              </p>
+            </div>
+            <div class="info-card">
+              <h4>Kegagalan Komponen (Nyetrum Terus)</h4>
+              <p>
+                <strong>Penyebab:</strong> JAUH LEBIH BAHAYA. Salah satu MOSFET
+                di H-Bridge "jebol" (short). Akibatnya, arus DC 100V langsung
+                keluar ke pasien tanpa putus. <br /><strong
+                  >Peran Teknisi:</strong
+                >
+                Ini bisa menyebabkan luka bakar serius. Sensor Arus adalah
+                satu-satunya pelindung. Pastikan sensor ini bekerja!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 11: Peran Teknisi -->
+      <div class="slide" id="slide11">
+        <h2 class="slide-title">Jadi, Peran Teknisi Elektromedis Apa?</h2>
+        <p class="slide-subtitle">
+          Kita adalah "Penjaga Gawang" Keamanan dan Akurasi Pulsa.
+        </p>
+        <div class="slide-content">
+          <div class="info-card" style="width: 80%; text-align: left">
+            <p>
+              Fisioterapis mengoperasikan alat, tapi kita yang memastikan alat
+              itu <strong>MENGELUARKAN SINYAL YANG BENAR</strong> dan
+              <strong>AMAN</strong>.
+            </p>
+            <ul
+              style="
+                list-style-type: square;
+                padding-left: 20px;
+                margin-top: 10px;
+              "
+            >
+              <li>
+                <strong>Kalibrasi & Verifikasi:</strong> Tugas utama! Pakai
+                Osiloskop, sambungkan ke output alat (pakai *load resistor*).
+              </li>
+              <li>
+                <strong>Cek Frekuensi:</strong> Jika di-setel 50 Hz, apakah di
+                osiloskop benar 50 Hz?
+              </li>
+              <li>
+                <strong>Cek Lebar Pulsa:</strong> Jika di-setel 200us, apakah di
+                osiloskop benar 200us?
+              </li>
+              <li>
+                <strong>Cek Intensitas:</strong> Jika di-setel 20 mA, apakah
+                arus yang terukur benar 20 mA?
+              </li>
+              <li>
+                <strong>Uji Keamanan Listrik:</strong> Tes arus bocor pakai
+                (Electrical Safety Analyzer) untuk memastikan trafo isolasi
+                bekerja sempurna.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let currentSlide = 1;
+      const slides = document.querySelectorAll(".slide");
+      const totalSlides = slides.length;
+      const fullscreenBtn = document.getElementById("fullscreen-btn");
+
+      let isAnimating = true;
+      const names = [
+        { full: "Dwi Sekar Renggowati", short: "Sekar [2040124012]" },
+        { full: "Muhammad Sulthan", short: "Sulthan[2040124028]" },
+        { full: "Nazilla Ilma", short: "Zilla [2040124030]" },
+        { full: "Rabbil Imam Samudera", short: "Rabbil [2040124033]" },
+        { full: "Maulana Alfi Zamriza", short: "Alfi [2040124024]" },
+      ];
+      const nameContainer = document.getElementById("name-container");
+
+      function pause(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      async function typeName(element, text) {
+        return new Promise((resolve) => {
+          let i = 0;
+          element.innerHTML = '<span class="cursor"></span>';
+          const span = document.createElement("span");
+          element.prepend(span);
+
+          const interval = setInterval(() => {
+            if (i < text.length) {
+              span.textContent += text.charAt(i);
+              i++;
+            } else {
+              clearInterval(interval);
+              resolve();
+            }
+          }, 100);
+        });
+      }
+
+      async function glitchToShort(element, shortName) {
+        return new Promise(async (resolve) => {
+          element.classList.add("glitching");
+          await pause(400);
+
+          const span = element.querySelector("span:first-child");
+          if (span) {
+            span.textContent = shortName;
+          } else {
+            element.textContent = shortName;
+          }
+
+          element.classList.remove("glitching");
+
+          const cursor = element.querySelector(".cursor");
+          if (cursor) cursor.style.display = "none";
+
+          resolve();
+        });
+      }
+
+      async function runNameAnimation() {
+        for (const name of names) {
+          const nameEl = document.createElement("div");
+          nameEl.className = "name-entry";
+          nameContainer.appendChild(nameEl);
+          nameEl.classList.add("visible");
+
+          await typeName(nameEl, name.full);
+          await pause(500);
+          await glitchToShort(nameEl, name.short);
+          await pause(800);
+        }
+        isAnimating = false;
+      }
+
+      document.addEventListener("DOMContentLoaded", runNameAnimation);
+
+      function showSlide(slideNumber) {
+        if (
+          slideNumber < 1 ||
+          slideNumber > totalSlides ||
+          slideNumber === currentSlide
+        )
+          return;
+        const currentSlideElement = document.getElementById(
+          `slide${currentSlide}`
+        );
+        const nextSlideElement = document.getElementById(`slide${slideNumber}`);
+        currentSlideElement.classList.add("exit");
+        currentSlideElement.classList.remove("active");
+        setTimeout(() => {
+          nextSlideElement.classList.remove("exit");
+          nextSlideElement.classList.add("active");
+          currentSlide = slideNumber;
+        }, 300);
+      }
+
+      function toggleFullscreen() {
+        if (
+          !document.fullscreenElement &&
+          !document.mozFullScreenElement &&
+          !document.webkitFullscreenElement &&
+          !document.msFullscreenElement
+        ) {
+          if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+          } else if (document.documentElement.mozRequestFullScreen) {
+            document.documentElement.mozRequestFullScreen();
+          } else if (document.documentElement.webkitRequestFullscreen) {
+            document.documentElement.webkitRequestFullscreen();
+          } else if (document.documentElement.msRequestFullscreen) {
+            document.documentElement.msRequestFullscreen();
+          }
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+          } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+          } else if (document.documentElement.msExitFullscreen) {
+            document.documentElement.msExitFullscreen();
+          }
+        }
+      }
+      fullscreenBtn.addEventListener("click", toggleFullscreen);
+
+      document.addEventListener("keydown", (event) => {
+        if (isAnimating) return;
+
+        if (event.key === "ArrowLeft") {
+          showSlide(currentSlide - 1);
+        } else if (event.key === "ArrowRight") {
+          showSlide(currentSlide + 1);
+        }
+      });
+    </script>
+  </body>
+</html>
